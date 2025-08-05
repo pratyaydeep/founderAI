@@ -66,3 +66,11 @@ class Config:
                 return json.load(f)
         except (json.JSONDecodeError, IOError):
             return []
+    
+    def clear_session(self):
+        """Clear/reset the current session"""
+        try:
+            if self.session_file.exists():
+                self.session_file.unlink()
+        except IOError:
+            pass

@@ -90,8 +90,6 @@ python3 -m src.main "List the files in the current directory"
 - `--config, -c`: Show current configuration
 - `--verbose, -v`: Enable verbose debug output
 - `--no-tools`: Disable file system tools (conversation only mode)
-- `--stateless`: Force stateless mode (no conversation history)
-- `--persistent`: Enable conversation history (overrides default stateless mode)
 
 ### Examples
 
@@ -110,12 +108,6 @@ founderai --verbose "Hello"
 
 # Conversation only (no file tools)
 founderai --no-tools "Hello"
-
-# Interactive mode with conversation history
-founderai --persistent
-
-# Force stateless mode (default anyway)
-founderai --stateless "Hello"
 ```
 
 ## Available Tools
@@ -158,9 +150,9 @@ Configuration is stored in `~/.cli_tool/config.json`. You can modify:
 
 ## Session Management
 
-- Conversations are automatically saved to `~/.cli_tool/session.json`
-- Previous sessions are restored when starting the tool
-- History is limited by `max_history` setting
+- Conversations persist only during the current session
+- Session history is automatically cleared when you exit the tool
+- Each new session starts fresh with no previous conversation history
 
 ## Example Interactions
 

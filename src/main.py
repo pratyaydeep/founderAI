@@ -287,15 +287,11 @@ class ChatSession:
 @click.option('--config', '-c', is_flag=True, help='Show configuration')
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose debug output')
 @click.option('--no-tools', is_flag=True, help='Disable file system tools for conversation only')
-@click.option('--stateless', is_flag=True, help='Disable session persistence')
 @click.argument('message', required=False)
-def main(model: Optional[str], host: Optional[str], config: bool, verbose: bool, no_tools: bool, stateless: bool, message: Optional[str]):
+def main(model: Optional[str], host: Optional[str], config: bool, verbose: bool, no_tools: bool, message: Optional[str]):
     """A CLI tool with file system access using Ollama"""
     
     cfg = Config()
-    
-    if stateless:
-        cfg.set("save_sessions", False)
     
     if config:
         console.print(Panel(json.dumps(cfg.config, indent=2), title="Configuration"))
@@ -321,6 +317,7 @@ def main(model: Optional[str], host: Optional[str], config: bool, verbose: bool,
     
     if message:
         session.chat_with_streaming(client, model, message)
+        cfg.clear_session()
         return
     
     try:
@@ -330,6 +327,7 @@ def main(model: Optional[str], host: Optional[str], config: bool, verbose: bool,
                 
                 if user_input.lower() in ['exit', 'quit', 'q']:
                     console.print("[yellow]Goodbye![/yellow]")
+                    cfg.clear_session()
                     break
                 
                 if not user_input.strip():
@@ -343,7 +341,10 @@ def main(model: Optional[str], host: Optional[str], config: bool, verbose: bool,
                 
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")
+        cfg.clear_session()
         sys.exit(1)
+    finally:
+        cfg.clear_session()
 
 if __name__ == "__main__":
     main()

@@ -112,11 +112,33 @@ founderai --no-tools "Hello"
 
 ## Available Tools
 
-The AI assistant has access to these file system tools:
+The AI assistant has access to these powerful tools:
 
+### File Operations
 1. **read_file**: Read contents of a file
-2. **write_file**: Write content to a file
+2. **write_file**: Write content to a file  
 3. **list_directory**: List directory contents
+
+### Command Execution
+4. **run_shell_command**: Execute any shell command
+5. **git_command**: Execute git operations (status, add, commit, push, pull, diff, log, branch, checkout)
+
+### Task Management
+6. **todo_add**: Add new TODO items for task tracking
+7. **todo_list**: List TODO items (can filter by status)
+8. **todo_update**: Update TODO status (pending, in_progress, completed)
+9. **todo_remove**: Remove TODO items
+
+### Web Search
+10. **search_web**: Search the web for information
+11. **search_documentation**: Search for documentation on specific sites
+12. **search_code_examples**: Search for code examples and implementations
+
+### Advanced Features
+- **Multi-turn context management**: Maintains conversation history across interactions
+- **Auto-context compression**: Automatically summarizes older conversation when approaching token limits
+- **Function calling fallback**: Works with models that don't support function calling
+- **Rich terminal output**: Beautiful formatted output with syntax highlighting
 
 ## Development
 
@@ -143,10 +165,12 @@ mypy .
 
 Configuration is stored in `~/.cli_tool/config.json`. You can modify:
 
-- `default_model`: Default Ollama model (qwen3:30b-a3b-instruct-2507-q4_K_M)
-- `default_host`: Default Ollama host:port
-- `max_history`: Maximum conversation history to keep
-- `save_sessions`: Whether to save chat sessions
+- `default_model`: Default Ollama model (qwen3-coder:latest)
+- `default_host`: Default Ollama host:port (localhost:11434)
+- `max_history`: Maximum conversation history to keep (50)
+- `save_sessions`: Whether to save chat sessions (true)
+- `max_context_tokens`: Maximum tokens before auto-compression (8000)
+- `auto_summarize`: Enable automatic context compression (true)
 
 ## Session Management
 
@@ -156,6 +180,7 @@ Configuration is stored in `~/.cli_tool/config.json`. You can modify:
 
 ## Example Interactions
 
+### File Operations
 ```
 You: Read the contents of requirements.txt
 Assistant: [Tool executes and shows file contents]
@@ -167,9 +192,59 @@ You: What files are in the current directory?
 Assistant: [Tool lists directory contents with file types and sizes]
 ```
 
+### Command Execution
+```
+You: Check the git status
+Assistant: [Executes git status and shows output]
+
+You: Run the tests using pytest
+Assistant: [Executes pytest command and shows results]
+```
+
+### Task Management
+```
+You: Add a TODO to implement user authentication
+Assistant: [Creates new TODO item with ID]
+
+You: Show me all my pending tasks
+Assistant: [Lists TODO items with status and priority]
+
+You: Mark task abc123 as completed
+Assistant: [Updates TODO status]
+```
+
+### Web Search
+```
+You: Search for Python best practices
+Assistant: [Searches web and shows relevant results]
+
+You: Find documentation for FastAPI
+Assistant: [Searches documentation sites for FastAPI info]
+```
+
 ## Troubleshooting
 
 1. **Ollama not responding**: Ensure Ollama is running on the specified host/port
 2. **Model not found**: Make sure the model is installed in Ollama (`ollama pull model-name`)
-3. **Permission errors**: Check file permissions for read/write operations
-4. **Config issues**: Delete `~/.cli_tool/` directory to reset configuration
+3. **Function calling errors**: Some models don't support function calling - the app will automatically fall back to text-based responses
+4. **Permission errors**: Check file permissions for read/write operations
+5. **Config issues**: Delete `~/.cli_tool/` directory to reset configuration
+6. **TODOs not persisting**: Check write permissions for `~/.cli_tool/` or project directory (`.founder_todo.json`)
+
+### Function Calling Support
+
+Not all Ollama models support OpenAI-style function calling. When function calling fails, FounderAI automatically falls back to conversation-only mode. 
+
+**✅ Tested Models with Function Calling Support:**
+- `qwen3:30b-a3b-instruct-2507-q4_K_M` - Full OpenAI-style function calling support (recommended, default)
+- `qwen2.5:0.5b` - Full OpenAI-style function calling support
+- `mistral:7b-instruct` - Text-based tool mentions (partial support)
+
+**❌ Models without Function Calling Support:**
+- `qwen3-coder:latest` - No function calling (falls back to conversation)
+- `codestral:latest` - No function calling
+- `gemma3:27b` - No function calling
+- `deepseek-coder-v2:latest` - No function calling
+- `llama3-gradient:instruct` - No function calling
+
+The fallback ensures the application works with any model, providing helpful guidance even without direct tool execution. For the best experience with file operations and tools, use `qwen3:30b-a3b-instruct-2507-q4_K_M` or `qwen2.5:0.5b` as they both support full function calling.

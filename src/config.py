@@ -10,10 +10,14 @@ class Config:
         self.config_dir.mkdir(exist_ok=True)
         
         self.default_config = {
-            "default_model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+            # Function calling capable models: qwen3:30b-a3b-instruct-2507-q4_K_M, qwen2.5:0.5b, mistral:7b-instruct (text-based)
+            # Non-function calling models: qwen3-coder:latest, codestral:latest, gemma3:27b
+            "default_model": "qwen3:30b-a3b-instruct-2507-q4_K_M",  # Supports true OpenAI-style function calling
             "default_host": "localhost:11434",
             "max_history": 50,
-            "save_sessions": True
+            "save_sessions": True,
+            "max_context_tokens": 8000,
+            "auto_summarize": True
         }
         
         self.config = self.load_config()

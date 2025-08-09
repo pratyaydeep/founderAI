@@ -1,9 +1,17 @@
+"""
+__all__ = ['Config', 'load_config', 'save_config', 'get', 'set', 'save_session', 'load_session', 'clear_session']
+
+Config module for FounderAI.
+
+This module provides functionality for config.
+"""
 import json
 from pathlib import Path
 from typing import Dict, Any
 
 class Config:
     def __init__(self):
+        """Function __init__."""
         self.config_dir = Path.home() / ".cli_tool"
         self.config_file = self.config_dir / "config.json"
         self.session_file = self.config_dir / "session.json"

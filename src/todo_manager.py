@@ -1,4 +1,6 @@
 """
+__all__ = ['TodoManager', 'add_todo', 'list_todos', 'update_todo_status', 'remove_todo', 'get_todo', 'clear_completed', 'get_summary']
+
 TODO Management Tool for FounderAI
 Allows tracking tasks across sessions and projects.
 """

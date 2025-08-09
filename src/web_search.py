@@ -1,4 +1,6 @@
 """
+__all__ = ['WebSearchTool', 'search_web', 'search_documentation', 'search_code_examples']
+
 Web Search Integration for FounderAI
 Simple web search using DuckDuckGo (no API key required)
 """
@@ -10,6 +12,7 @@ from urllib.parse import quote
 
 class WebSearchTool:
     def __init__(self):
+        """Function __init__."""
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
